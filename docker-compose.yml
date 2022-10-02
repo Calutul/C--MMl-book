@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  cmmlbook:
+    image: cmmlbook
+    build:
+      context: .
+      dockerfile: ./Dockerfile
