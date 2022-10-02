@@ -45,11 +45,134 @@ int **generateMatrixA(int lines, int columns)
   return matrix; 
 }
 
-int** rowEchalonMatrix(int** A,int rows,int columns,int** b){
-  int** newA=allocateMatrix<int>(columns,columns);
-  
+int partition(int arr[], int start, int end)
+{
+ 
+    int pivot = arr[start];
+ 
+    int count = 0;
+    for (int i = start + 1; i <= end; i++) {
+        if (arr[i] <= pivot)
+            count++;
+    }
+ 
+    // Giving pivot element its correct position
+    int pivotIndex = start + count;
+    std::swap(arr[pivotIndex], arr[start]);
+ 
+    // Sorting left and right parts of the pivot element
+    int i = start, j = end;
+ 
+    while (i < pivotIndex && j > pivotIndex) {
+ 
+        while (arr[i] <= pivot) {
+            i++;
+        }
+ 
+        while (arr[j] > pivot) {
+            j--;
+        }
+ 
+        if (i < pivotIndex && j > pivotIndex) {
+            std::swap(arr[i++], arr[j--]);
+        }
+    }
+ 
+    return pivotIndex;
+}
+ 
+void quickSort(int arr[], int start, int end)
+{
+ 
+    // base case
+    if (start >= end)
+        return;
+ 
+    // partitioning the array
+    int p = partition(arr, start, end);
+ 
+    // Sorting the left part
+    quickSort(arr, start, p - 1);
+ 
+    // Sorting the right part
+    quickSort(arr, p + 1, end);
+}
 
-  return newA;
+void swapColumns(int** A,int column1,int column2,int elements){
+  for(int i=0;i<elements;i++){
+    std::swap(A[i][column1],A[i][column2]);
+  }
+}
+
+void swapRows(int* array1,int* array2,int elements){
+  for(int i=0;i<elements;i++){
+    std::swap(array1[i],array2[i]);
+  }
+}
+
+void printMatrix(int** A,int rows,int columns){
+  std::cout<<std::endl<<" The value of the A matrix is:"<<std::endl;
+  for (int i = 0; i < rows; i++)
+  {
+    std::cout<<std::endl;
+    for(int j=0;j<columns;j++){
+      std::cout<<A[i][j]<<" ";
+    }    
+  }
+  std::cout<<std::endl;
+}
+
+int indexOfMaxValueFromArray(int* array,int elements){
+  int max=array[0];
+  int index=0;
+  for(int i=0;i<elements;i++){
+    if(array[i]>max){
+      max=array[0];
+      index=i;
+    }
+  }
+  return index;
+}
+
+
+void rearrangeMatrixForRowEchalon(int** A,const int rows,const int columns){
+  int* numberOfZerosOnRow=new int[rows]();
+  int* numberOfZerosOnColumns=new int[columns]();
+    for(int i=0;i<rows;i++){
+    for(int j=0;j<columns;j++){
+      if(A[i][j]==0){
+        numberOfZerosOnRow[i]++;
+        numberOfZerosOnColumns[i]++;
+      }
+    }
+  }
+  //quickSort(numberOfZerosOnRow,0,rows);
+  //quickSort(numberOfZerosOnColumns,0,rows);
+  for(int i=rows;i>0;i--){
+    int maxindex=indexOfMaxValueFromArray(numberOfZerosOnRow,i);
+     if(maxindex!=i){
+        swapRows(A[i],A[maxindex],columns);
+     }
+  }
+  printMatrix(A,rows,columns);
+  for(int i=0;i<columns;i++){
+    int maxindex=indexOfMaxValueFromArray(numberOfZerosOnColumns+i,columns-i);
+     if(maxindex!=0){
+        swapColumns(A,i,maxindex+i,rows);
+     }
+  }
+  printMatrix(A,rows,columns);
+}
+
+void rowEchalonMatrix(int** A,const int rows,const int columns){
+  rearrangeMatrixForRowEchalon(A,rows,columns);
+  for(int i=1;i<rows;i++){
+    for(int j=0;j<i-1;j++){
+      
+    }
+  }
+
+
 }
 
 int main(int argc, char const *argv[])
@@ -62,7 +185,7 @@ int main(int argc, char const *argv[])
   std::cout << "Number Of columns:" << std::endl;
   std::cin>>columns;
   int** matrix=generateMatrixA(lines,columns);
-
+  rowEchalonMatrix(matrix,lines,columns);
   deallocateMatrix<int>(matrix,lines,columns);
   return 0;
 }
