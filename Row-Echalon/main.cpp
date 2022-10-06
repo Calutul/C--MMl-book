@@ -50,6 +50,14 @@ int **generateMatrixA(int lines, const int columns)
   return matrix;
 }
 
+void swapColumns(int **A, const int column1, const int column2, const int elements)
+{
+  for (int i = 0; i < elements; i++)
+  {
+    std::swap(A[i][column1], A[i][column2]);
+  }
+}
+
 void swapRows(int *array1, int *array2, const int elements)
 {
   for (int i = 0; i < elements; i++)
